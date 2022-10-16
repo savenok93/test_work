@@ -1,0 +1,40 @@
+  - name: Install nginx
+    yum:
+      name: nginx
+      state: present
+
+  # - name: insert index.html page
+  #   copy:
+  #     src: index.html
+  #     dest: /usr/share/nginx/html
+  #     owner: root
+  #     group: root
+  #     mode: 0644
+  - name: copy config sites
+    copy:
+      src: /vagrant/roles/nginx/files/sites.conf
+      dest: /etc/nginx/conf.d/sites.conf
+    become: true
+
+  - name: copy config nginx
+    copy:
+      src: /vagrant/roles/nginx/files/nginx.conf
+      dest: /etc/nginx/nginx.conf
+    become: true
+
+  - name: Start nginx
+    service:
+      name: nginx
+      state: started
+
+  - name: Enable nginx service
+    systemd:
+      name: nginx.service
+      enabled: true
+      masked: no
+
+  - name: check nginx
+    uri:
+      url: http://127.0.0.1:80
+      method: GET
+      status_code: 200

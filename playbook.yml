@@ -1,0 +1,14 @@
+---
+- name: Install 
+  hosts: all
+  connection: local
+  become: true
+  roles:
+     - role: nginx
+     - role: node_exporter2
+     - role: prometheus2
+     - role: grafana2
+       vars:
+         grafana_security:
+           admin_user: admin
+           admin_password: admin
